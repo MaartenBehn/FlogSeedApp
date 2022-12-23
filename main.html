@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<!-- Add a svg area, empty -->
+<svg id="dataviz_area" height=200 width=450></svg>
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script>
+    var svg = d3.select("#dataviz_area");
+    chart = {
+        const minX = x(data[0].date);
+        const maxX = x(data[data.length - 1].date);
+        const overwidth = maxX - minX + margin.left + margin.right;
+
+        const parent = d3.create("div");
+
+        parent.append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .style("position", "absolute")
+            .style("pointer-events", "none")
+            .style("z-index", 1)
+            .call(svg => svg.append("g").call(yAxis));
+
+        const body = parent.append("div")
+            .style("overflow-x", "scroll")
+            .style("-webkit-overflow-scrolling", "touch");
+
+        body.append("svg")
+            .attr("width", overwidth)
+            .attr("height", height)
+            .style("display", "block")
+            .call(svg => svg.append("g").call(xAxis))
+            .append("path")
+            .datum(data)
+            .attr("fill", "steelblue")
+            .attr("d", area);
+
+        yield parent.node();
+
+        // Initialize the scroll offset after yielding the chart to the DOM.
+        body.node().scrollBy(overwidth, 0);
+    }
+</script>
